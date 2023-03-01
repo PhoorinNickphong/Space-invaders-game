@@ -11,6 +11,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 import random
 
@@ -188,6 +189,82 @@ class Game(Widget):
         speed = ms * self.move_speed
 
         firing = False
+
+        if manager.current == 'Game' and len(self.get_children('lifes')) > 0:
+    
+            posx = 0
+            posy = 0
+
+            if 'right' in self.pressed:
+                posx = speed
+            if 'left' in self.pressed:
+                posx -= speed
+            if 'up' in self.pressed:
+                posy += speed
+            if 'down' in self.pressed:
+                posy -= speed
+
+            if player_x + player_w + posx > self.win_w or player_x + posx < 0:
+                posx = 0
+
+            if 'spacebar' in self.pressed:
+                if self.firing is False:
+                    self.fire()
+
+            if len(self.get_children('foes')) < 6:
+                self.spawn_enemy()
+
+            for foe in self.get_children('foes'):
+                foe.pos = (foe.pos[0], foe.pos[1] - 1)
+                if foe.pos[1] < self.player.pos[1]:
+                    self.groups['foes'].remove(foe)
+                    self.groups['lifes'].remove(self.get_children('lifes')[-1])
+
+            for fire in self.get_children('bullets'):
+                fire.pos = (fire.pos[0], fire.pos[1] + speed)
+                for enemy in self.get_children('foes'):
+                    if fire.pos[1] + fire.size[1] > enemy.pos[1] and fire.pos[0] < enemy.pos[0] + enemy.size[0] and fire.pos[0] + fire.size[0] > enemy.pos[0]:
+                        self.kill_count = self.kill_count + 1
+                        self.kill_lbl.text = 'Score: ' + str(self.kill_count)
+
+                        with self.canvas.before:
+                            self.deads.append(Rectangle(size=(enemy.size[0] - 5, enemy.size[1] - 5), pos=enemy.pos, source='assets/explosion.png'))
+
+                        if len(self.deads) > 0:
+                            Clock.schedule_once(self.remove_explosion, .4)
+
+                        self.sounds['foe_death'].volume = .1
+                        self.sounds['foe_death'].play()
+
+                        self.groups['foes'].remove(enemy)
+                        self.groups['bullets'].remove(fire)
+
+                if fire.pos[1] > self.win_h:
+                    self.groups['bullets'].remove(fire)
+
+            self.player.pos = (player_x + posx, player_y)
+
+            if self.sounds['theme'].state != 'play':
+                self.sounds['theme'].play()
+            
+            else:
+                #self.canvas.clear()
+                self.dead = True
+                self.groups['foes'].clear()
+                self.groups['bullets'].clear()
+
+                manager.last_score = 'Your score: ' + str(self.kill_count)
+
+                self.kill_count = 0
+                self.kill_lbl.text = 'Score: 0'
+
+                if len(self.get_children('lifes')) == 0:
+                    if manager.current == 'Game':
+                        self.sounds['player_death'].play()
+                   
+                    #self.sounds['gameover'].play()
+                    self.sounds['theme'].stop()
+                    manager.current = 'GameOver'
 
 
 class MainApp(App):
