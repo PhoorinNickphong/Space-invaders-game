@@ -154,6 +154,20 @@ class Game(Widget):
                 else:
                     self.groups['lifes'].add(Rectangle(size=self.life_size, pos=(self.get_children('lifes')[-1].pos[0] + self.get_children('lifes')[-1].size[0], self.life_size[1]), source='images/life.png'))
 
+    def show_over(self, ms):
+        #self.canvas.remove(self.explosion)
+        #self.explosion = False
+        self.remove_obj(self.explosion)
+        self.life_count = 3
+        manager.current = 'GameOver'
+
+    def clear(self):
+        self.player.pos = self.player_init
+        for enemy in self.enemies:
+            self.canvas.remove(enemy)
+        for fire in self.fires:
+            self.canvas.remove(fire)
+
 
 class MainApp(App):
     def build(self):
