@@ -1,12 +1,18 @@
+from kivy.config import Config
+Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'fullscreen', False)
+
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.core.audio.audio_sdl2 import SoundSDL2
-from kivy.graphics import Color,InstructionGroup
+from kivy.graphics import Rectangle,Color,InstructionGroup, BindTexture
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.uix.button import Button
+
+import random
 
 class Game(Widget):
     def __init__(self, **kwargs):
@@ -105,6 +111,17 @@ class Game(Widget):
             self.pressed.remove(btn.id)
         else:
             self.pressed.add(btn.id)
+    
+    def remove_obj(self, obj):
+        self.canvas.remove(obj)
+
+    def spawn_player(self, pos=None):
+        with self.canvas:
+            self.player = Rectangle(size=self.player_size, pos=self.player_init, source='images/spaceship.png')
+
+    def spawn_enemy(self):
+        posx = random.randint(int(self.enemy_size[0]), int(self.win_w - self.enemy_size[0]))
+        self.groups['foes'].add(Rectangle(pos=(posx, self.win_h), size=self.enemy_size, source='images/enemy.png', group='enemy'))
 
 
 class MainApp(App):
