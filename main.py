@@ -87,6 +87,24 @@ class Game(Widget):
             for btn in self.buttons:
                 btn.bind(state=self._key_press)
                 self.add_widget(btn)
+    
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._keyboard_down)
+        self._keyboard.unbind(on_key_up=self._keyboard_up)
+        self._keyboard = None
+
+    def _keyboard_down(self, keyboard, keycode, text, mod):
+        self.pressed.add(keycode[1])
+
+    def _keyboard_up(self, keyboard, keycode):
+        if keycode[1] in self.pressed:
+            self.pressed.remove(keycode[1])
+
+    def _key_press(self, btn, state=None):
+        if btn.id in self.pressed:
+            self.pressed.remove(btn.id)
+        else:
+            self.pressed.add(btn.id)
 
 
 class MainApp(App):
