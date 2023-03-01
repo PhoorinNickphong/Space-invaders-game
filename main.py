@@ -175,6 +175,19 @@ class Game(Widget):
                 children.append(child)
 
         return children
+    
+    def start(self, ms):
+        posx = 0
+        posy = 0
+
+        player_x = self.player.pos[0]
+        player_y = self.player.pos[1]
+        player_w = self.player.size[0]
+        player_h = self.player.size[1]
+
+        speed = ms * self.move_speed
+
+        firing = False
 
 
 class MainApp(App):
