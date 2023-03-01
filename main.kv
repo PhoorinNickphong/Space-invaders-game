@@ -1,2 +1,64 @@
 <Start>
     size: app.window_size
+    size_hint: None, None
+
+    Image:
+        source: 'images/title.png'
+        allow_stretch: True
+        keep_ratio: False
+        size: self.parent.size[0], self.parent.size[1] / 2
+        pos: 0, self.parent.size[1] * .45
+
+    GridLayout:
+
+        cols: 3
+        size: self.parent.size
+        pos: self.parent.pos
+
+        BoxLayout:
+
+        BoxLayout:
+            id: start_button
+            size: self.parent.size
+            pos: self.parent.pos
+            orientation: 'vertical'
+
+            Button:
+                text: 'START'
+                size_hint_y: None
+                pos: self.pos[0], self.parent.size[1] * .25
+                size: self.size[0], 50
+                on_press: app.manager.current = 'Game'
+
+        BoxLayout:
+
+
+
+
+<GameOver>
+    size: app.window_size
+    size_hint: None, None
+
+    Image:
+        source: 'images/game_over.png'
+        allow_stretch: True
+        keep_ratio: False
+        size: self.parent.size
+
+    GridLayout:
+
+        cols: 3
+        size: self.parent.size
+        pos: self.parent.pos
+
+        BoxLayout:
+
+        BoxLayout:
+            Button:
+                text: 'RETRY'
+                size_hint_y: None
+                pos: self.pos[0], self.parent.size[1] * .2
+                size: self.size[0], 50
+                on_press: root.retry()
+
+        BoxLayout:
