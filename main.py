@@ -24,6 +24,21 @@ class Game(Widget):
             'gameover': SoundSDL2(source='assets/gameover.mp3')
         }
 
+        self.player_init = (self.win_w / 2 - 25, self.win_h / 6)
+
+        self.pressed = set()
+        self.firing = False
+        self.fires = []
+        self.enemies = []
+        self.lifes = []
+        self.buttons = []
+        self.deads = []
+        self.move_speed = (self.win_w * self.win_h) * .001
+        self.kill_count = 1
+        self.dead = False
+
+        self.sounds['theme'].play()
+
 class MainApp(App):
     def build(self):
         self.window_size = Window.size
