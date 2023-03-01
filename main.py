@@ -134,6 +134,15 @@ class Game(Widget):
         self.groups['bullets'].add(Rectangle(pos=(self.player.pos[0] + self.player_size[0] / 2.2, self.player.pos[1] + self.player.size[1]), size=self.fire_size))
         Clock.schedule_once(self.stop_firing, .1)
 
+    def explode(self, obj):
+        tex = Image(source='asssts/explosion_animate.png').texture
+        tex = tex.get_region(0, 0, 32, 32)
+        x = Rectangle(size=obj.size, pos=obj.pos, texture=tex)
+
+    def remove_explosion(self, ms):
+        for dead in self.deads:
+            dead.size = (0, 0)
+
 
 class MainApp(App):
     def build(self):
