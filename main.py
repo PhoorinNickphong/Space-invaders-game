@@ -55,6 +55,9 @@ class Game(Widget):
         self.canvas.add(self.groups['explosions'])
         self.canvas.after.add(self.groups['bullets'])
 
+        fire_tex = Image(source='images/firing.png').texture.get_region(0, 0, 32, 32)
+
+
 class MainApp(App):
     def build(self):
         self.window_size = Window.size
