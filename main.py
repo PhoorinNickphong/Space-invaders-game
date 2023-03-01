@@ -167,6 +167,14 @@ class Game(Widget):
             self.canvas.remove(enemy)
         for fire in self.fires:
             self.canvas.remove(fire)
+    
+    def get_children(self, group):
+        children = []
+        for child in self.groups[group].children:
+            if isinstance(child, BindTexture) is False and isinstance(child, Color) is False:
+                children.append(child)
+
+        return children
 
 
 class MainApp(App):
