@@ -1,5 +1,6 @@
 from kivy.app import App
-
+from kivy.core.window import Window
+from kivy.uix.widget import Widget
 
 class Game(Widget):
     def __init__(self, **kwargs):
