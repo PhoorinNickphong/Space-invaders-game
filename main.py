@@ -123,6 +123,17 @@ class Game(Widget):
         posx = random.randint(int(self.enemy_size[0]), int(self.win_w - self.enemy_size[0]))
         self.groups['foes'].add(Rectangle(pos=(posx, self.win_h), size=self.enemy_size, source='images/enemy.png', group='enemy'))
 
+    def stop_firing(self, ms):
+        self.firing = False
+
+    def fire(self):
+        self.firing = True
+        self.sounds['fire'].volume = .1
+        self.sounds['fire'].play()
+
+        self.groups['bullets'].add(Rectangle(pos=(self.player.pos[0] + self.player_size[0] / 2.2, self.player.pos[1] + self.player.size[1]), size=self.fire_size))
+        Clock.schedule_once(self.stop_firing, .1)
+
 
 class MainApp(App):
     def build(self):
