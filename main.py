@@ -29,11 +29,11 @@ class Game(Widget):
         self.life_size = (self.win_w * .035, self.win_h * .035)
 
         self.sounds = {
-            'fire': SoundSDL2(source='assets/fire.wav'),
-            'player_death': SoundSDL2(source='assets/player_death.wav'),
-            'foe_death': SoundSDL2(source='assets/foe_death.wav'),
-            'theme': SoundSDL2(source='assets/theme.mp3'),
-            'gameover': SoundSDL2(source='assets/gameover.mp3')
+            'fire': SoundSDL2(source='sounds/fire.wav'),
+            'player_death': SoundSDL2(source='sounds/player_death.wav'),
+            'foe_death': SoundSDL2(source='sounds/foe_death.wav'),
+            'theme': SoundSDL2(source='sounds/theme.mp3'),
+            'gameover': SoundSDL2(source='sounds/gameover.mp3')
         }
 
         self.player_init = (self.win_w / 2 - 25, self.win_h / 6)
