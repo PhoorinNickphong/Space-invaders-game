@@ -3,17 +3,19 @@ Config.set('graphics', 'resizable', False)
 Config.set('graphics', 'fullscreen', False)
 
 from kivy.app import App
-from kivy.core.window import Window
+from kivy.graphics import Rectangle, Color, InstructionGroup, BindTexture
 from kivy.uix.widget import Widget
-from kivy.core.audio.audio_sdl2 import SoundSDL2
-from kivy.graphics import Rectangle,Color,InstructionGroup, BindTexture
-from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.uix.image import Image
 from kivy.uix.button import Button
+from kivy.animation import Animation
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.audio.audio_sdl2 import SoundSDL2
 
 import random
+
 
 class Game(Widget):
     def __init__(self, **kwargs):
@@ -51,6 +53,7 @@ class Game(Widget):
 
         self.sounds['theme'].play()
 
+
         self.groups = {
             'foes': InstructionGroup(),
             'bullets': InstructionGroup(),
@@ -67,7 +70,7 @@ class Game(Widget):
         self.canvas.after.add(self.groups['bullets'])
 
         fire_tex = Image(source='images/firing.png').texture.get_region(0, 0, 32, 32)
-        
+
         self.spawn_player()
 
         self.kill_lbl = Label(text='Score: 0', pos=(self.life_size[0], self.win_h - self.life_size[1] * 4), font_size=30)
@@ -94,7 +97,7 @@ class Game(Widget):
             for btn in self.buttons:
                 btn.bind(state=self._key_press)
                 self.add_widget(btn)
-    
+
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._keyboard_down)
         self._keyboard.unbind(on_key_up=self._keyboard_up)
@@ -112,7 +115,7 @@ class Game(Widget):
             self.pressed.remove(btn.id)
         else:
             self.pressed.add(btn.id)
-    
+
     def remove_obj(self, obj):
         self.canvas.remove(obj)
 
@@ -140,10 +143,6 @@ class Game(Widget):
         tex = tex.get_region(0, 0, 32, 32)
         x = Rectangle(size=obj.size, pos=obj.pos, texture=tex)
 
-    def remove_explosion(self, ms):
-        for dead in self.deads:
-            dead.size = (0, 0)
-
     def restore(self, btn=None):
         self.life_count = 3
         self.kill_count = 0
@@ -154,6 +153,10 @@ class Game(Widget):
                     self.groups['lifes'].add(Rectangle(size=self.life_size, pos=self.life_size, source='images/life.png'))
                 else:
                     self.groups['lifes'].add(Rectangle(size=self.life_size, pos=(self.get_children('lifes')[-1].pos[0] + self.get_children('lifes')[-1].size[0], self.life_size[1]), source='images/life.png'))
+
+    def remove_explosion(self, ms):
+        for dead in self.deads:
+            dead.size = (0, 0)
 
     def show_over(self, ms):
         #self.canvas.remove(self.explosion)
@@ -168,7 +171,7 @@ class Game(Widget):
             self.canvas.remove(enemy)
         for fire in self.fires:
             self.canvas.remove(fire)
-    
+
     def get_children(self, group):
         children = []
         for child in self.groups[group].children:
@@ -176,7 +179,7 @@ class Game(Widget):
                 children.append(child)
 
         return children
-    
+
     def start(self, ms):
         posx = 0
         posy = 0
@@ -191,7 +194,7 @@ class Game(Widget):
         firing = False
 
         if manager.current == 'Game' and len(self.get_children('lifes')) > 0:
-    
+
             posx = 0
             posy = 0
 
@@ -228,7 +231,7 @@ class Game(Widget):
                         self.kill_lbl.text = 'Score: ' + str(self.kill_count)
 
                         with self.canvas.before:
-                            self.deads.append(Rectangle(size=(enemy.size[0] - 5, enemy.size[1] - 5), pos=enemy.pos, source='assets/explosion.png'))
+                            self.deads.append(Rectangle(size=(enemy.size[0] - 5, enemy.size[1] - 5), pos=enemy.pos, source='images/explosion.png'))
 
                         if len(self.deads) > 0:
                             Clock.schedule_once(self.remove_explosion, .4)
@@ -246,25 +249,25 @@ class Game(Widget):
 
             if self.sounds['theme'].state != 'play':
                 self.sounds['theme'].play()
-            
-            else:
-                #self.canvas.clear()
-                self.dead = True
-                self.groups['foes'].clear()
-                self.groups['bullets'].clear()
 
-                manager.last_score = 'Your score: ' + str(self.kill_count)
+        else:
+            #self.canvas.clear()
+            self.dead = True
+            self.groups['foes'].clear()
+            self.groups['bullets'].clear()
 
-                self.kill_count = 0
-                self.kill_lbl.text = 'Score: 0'
+            manager.last_score = 'Your score: ' + str(self.kill_count)
 
-                if len(self.get_children('lifes')) == 0:
-                    if manager.current == 'Game':
-                        self.sounds['player_death'].play()
+            self.kill_count = 0
+            self.kill_lbl.text = 'Score: 0'
+
+            if len(self.get_children('lifes')) == 0:
+                if manager.current == 'Game':
+                   self.sounds['player_death'].play()
                    
-                    #self.sounds['gameover'].play()
-                    self.sounds['theme'].stop()
-                    manager.current = 'GameOver'
+                #self.sounds['gameover'].play()
+                self.sounds['theme'].stop()
+                manager.current = 'GameOver'
 
 
 class Start(Widget):
