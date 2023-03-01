@@ -3,6 +3,9 @@ from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.core.audio.audio_sdl2 import SoundSDL2
 from kivy.graphics import Color,InstructionGroup
+from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.clock import Clock
 
 class Game(Widget):
     def __init__(self, **kwargs):
@@ -56,6 +59,15 @@ class Game(Widget):
         self.canvas.after.add(self.groups['bullets'])
 
         fire_tex = Image(source='images/firing.png').texture.get_region(0, 0, 32, 32)
+        
+        self.spawn_player()
+
+        self.kill_lbl = Label(text='Score: 0', pos=(self.life_size[0], self.win_h - self.life_size[1] * 4), font_size=30)
+        self.add_widget(self.kill_lbl)
+
+        self.restore()
+
+        Clock.schedule_interval(self.start, 0)
 
 
 class MainApp(App):
