@@ -267,9 +267,43 @@ class Game(Widget):
                     manager.current = 'GameOver'
 
 
+class Start(Widget):
+    pass
+
+
+class GameOver(Widget):
+    pass
+
+    def retry(self, btn=None):
+        game.restore()
+        manager.current = 'Game'
+
+game = Game()
+game.controller('keyboard')
+
+manager = ScreenManager()
+
 class MainApp(App):
     def build(self):
         self.window_size = Window.size
+
+        self.manager = manager
+
+        self.manager.last_score = 'Your score: 0'
+
+        widgets = [
+            Start(),
+            game,
+            GameOver()
+        ]
+
+        for wid in widgets:
+            sc = Screen(name=wid.__class__.__name__)
+            sc.add_widget(wid)
+            self.manager.add_widget(sc)
+
+        return self.manager
+
 
 if __name__ == '__main__':
     MainApp().run()
