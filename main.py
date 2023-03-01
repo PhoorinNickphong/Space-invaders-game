@@ -143,6 +143,17 @@ class Game(Widget):
         for dead in self.deads:
             dead.size = (0, 0)
 
+    def restore(self, btn=None):
+        self.life_count = 3
+        self.kill_count = 0
+        self.sounds['theme'].play()
+        for x in range(self.life_count):
+            if len(self.get_children('lifes')) < self.life_count:
+                if len(self.get_children('lifes')) == 0:
+                    self.groups['lifes'].add(Rectangle(size=self.life_size, pos=self.life_size, source='images/life.png'))
+                else:
+                    self.groups['lifes'].add(Rectangle(size=self.life_size, pos=(self.get_children('lifes')[-1].pos[0] + self.get_children('lifes')[-1].size[0], self.life_size[1]), source='images/life.png'))
+
 
 class MainApp(App):
     def build(self):
