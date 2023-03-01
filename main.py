@@ -135,7 +135,7 @@ class Game(Widget):
         Clock.schedule_once(self.stop_firing, .1)
 
     def explode(self, obj):
-        tex = Image(source='asssts/explosion_animate.png').texture
+        tex = Image(source='images/explosion_animate.png').texture
         tex = tex.get_region(0, 0, 32, 32)
         x = Rectangle(size=obj.size, pos=obj.pos, texture=tex)
 
