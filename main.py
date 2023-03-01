@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.core.audio.audio_sdl2 import SoundSDL2
+from kivy.graphics import Color,InstructionGroup
 
 class Game(Widget):
     def __init__(self, **kwargs):
@@ -38,6 +39,21 @@ class Game(Widget):
         self.dead = False
 
         self.sounds['theme'].play()
+
+        self.groups = {
+            'foes': InstructionGroup(),
+            'bullets': InstructionGroup(),
+            'lifes': InstructionGroup(),
+            'explosions': InstructionGroup(),
+            'buttons': InstructionGroup()
+        }
+
+        self.groups['bullets'].add(Color(0, .7, 1))
+
+        self.canvas.add(self.groups['foes'])
+        self.canvas.add(self.groups['lifes'])
+        self.canvas.add(self.groups['explosions'])
+        self.canvas.after.add(self.groups['bullets'])
 
 class MainApp(App):
     def build(self):
