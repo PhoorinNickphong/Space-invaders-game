@@ -6,6 +6,7 @@ from kivy.graphics import Color,InstructionGroup
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.clock import Clock
+from kivy.uix.button import Button
 
 class Game(Widget):
     def __init__(self, **kwargs):
@@ -68,6 +69,24 @@ class Game(Widget):
         self.restore()
 
         Clock.schedule_interval(self.start, 0)
+
+    def controller(self, method):
+        if method == 'keyboard':
+            self.method = method
+            self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+            self._keyboard.bind(on_key_down=self._keyboard_down)
+            self._keyboard.bind(on_key_up=self._keyboard_up)
+        elif method == 'buttons':
+            self.method = method
+            self.buttons = [
+                Button(text='Left', pos=(self.win_w - (self.win_w * .03) - (self.win_w * .1) * 2.1, self.win_h * .1), size=(self.win_w * .1, self.win_h * .1), id='left'),
+                Button(text='Right', pos=(self.win_w - (self.win_w * .03) - self.win_w * .1, self.win_h * .1), size=(self.win_w * .1, self.win_h * .1), id='right'),
+                Button(text='Fire', pos=(self.win_w * .03, self.win_h * .1), size=(self.win_w * .1, self.win_h * .1), id='spacebar')
+            ]
+
+            for btn in self.buttons:
+                btn.bind(state=self._key_press)
+                self.add_widget(btn)
 
 
 class MainApp(App):
